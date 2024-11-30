@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Clients() {
   const [clients, setClients] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -40,13 +42,22 @@ function Clients() {
     fetchClients();
   }, []);
 
+  const handleClientClick = (clientName) => {
+    localStorage.setItem("selectedClient", clientName);
+    navigate("/reports");
+  };
+
   return (
     <div className="container mt-5">
       <h2>Clients</h2>
       {error && <p className="text-danger">{error}</p>}
       <div className="mt-3">
         {clients.map((client) => (
-          <button key={client.id} className="btn btn-outline-primary m-2">
+          <button
+            key={client.id}
+            className="btn btn-outline-primary m-2"
+            onClick={() => handleClientClick(client.name)}
+          >
             {client.name}
           </button>
         ))}

@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const notyf = new Notyf();
-  const navigate = useNavigate(); // For navigation after login
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,11 +29,7 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Login API Response:", data); // Log the API response for debugging
-
-        // Adjust to match the correct token key in the response
-        localStorage.setItem("token", data.accessToken); // Use 'accessToken' instead of 'access_token'
-        console.log("Stored token:", localStorage.getItem("token"));
+        localStorage.setItem("token", data.accessToken);
         notyf.success("Login successful!");
         navigate("/clients");
       } else {

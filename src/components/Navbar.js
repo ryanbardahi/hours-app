@@ -1,13 +1,11 @@
 import React from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
-  const navigate = useNavigate();
-  const location = useLocation(); // Get the current route
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
   };
 
   return (
@@ -16,11 +14,15 @@ function Navbar() {
         <Link className="navbar-brand ms-5" to="/">
           my-hours.
         </Link>
-        {/* Hide Logout button on the Login page */}
+        {location.pathname !== "/clients" && (
+          <Link className="nav-link me-5" to="/clients">
+            Clients
+          </Link>
+        )}
         {location.pathname !== "/" && (
-          <button className="btn btn-outline-danger me-5" onClick={handleLogout}>
+          <Link className="nav-link me-5" to="/" onClick={handleLogout}>
             Logout
-          </button>
+          </Link>
         )}
       </div>
     </nav>
