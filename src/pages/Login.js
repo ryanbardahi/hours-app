@@ -7,11 +7,13 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // State to control spinner visibility
   const notyf = new Notyf();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show spinner
 
     try {
       const response = await fetch("https://hours-app-server.onrender.com/login", {
@@ -37,12 +39,20 @@ function Login() {
       }
     } catch (error) {
       notyf.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false); // Hide spinner
     }
   };
 
-
   return (
     <div className="login-page">
+      {loading && ( // Full-page spinner
+        <div className="spinner-overlay">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
       <h2 className="text-center mb-4">Login</h2>
       <form className="login-form" onSubmit={handleLogin}>
         <div className="mb-3">
@@ -65,7 +75,7 @@ function Login() {
           </label>
           <div className="input-group">
             <input
-              type={showPassword ? "text" : "password"} // Toggle input type
+              type={showPassword ? "text" : "password"}
               id="password"
               className="form-control"
               value={password}
@@ -76,7 +86,7 @@ function Login() {
             <button
               type="button"
               className="btn btn-outline-secondary"
-              onClick={() => setShowPassword(!showPassword)} // Toggle visibility
+              onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? "Hide" : "Show"}
             </button>

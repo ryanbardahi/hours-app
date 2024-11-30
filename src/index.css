@@ -29,3 +29,184 @@ html, body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050; /* Higher than the page content */
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #007bff !important; /* Default link color */
+  transition: color 0.3s ease !important; /* Smooth transition for hover effect */
+}
+
+.nav-link:hover {
+  color: #0056b3 !important; /* Darker shade of blue on hover */
+}
+
+.navbar-brand {
+  color: #000 !important; /* Default brand color */
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+}
+
+.navbar-brand:hover {
+  color: #555 !important; /* Subtle hover effect for brand */
+}
+
+.flatpickr-small {
+  width: 400px;
+  height: 40px;
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  display: block;
+  margin: 0 auto;
+}
+
+.flatpickr-input {
+  max-width: 100%;
+  text-align: center;
+}
+
+.table {
+  font-size: 0.8rem;
+}
+
+.table thead th {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.3s ease;
+}
+
+.table-bordered {
+  border: 1px solid #dee2e6;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.table-dark th {
+  background-color: #343a40;
+  color: #fff;
+  border-color: #454d55;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.summary-section {
+  background-color: #f8f9fa;
+}
+
+.table-responsive {
+  position: relative;
+  overflow: visible; /* Allow visibility of pop-ups outside the table */
+}
+
+.table {
+  position: relative; /* Ensure table is positioned for z-index context */
+}
+
+.position-relative {
+  position: relative;
+  z-index: 1; /* Create a stacking context for the pop-up */
+}
+
+.edit-popover {
+  display: none;
+  position: absolute;
+  top: 90%;
+  left: 90%; /* Position pop-up to the right of the description */
+  transform: translateY(-50%);
+  background: #007bff;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure it's above the table */
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.position-relative:hover .edit-popover {
+  display: inline-block;
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  pointer-events: auto; /* Enable interaction */
+}
+
+.edit-popover:hover {
+  background: #0056b3;
+}
+
+.modal-simple {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+}
+
+.modal-box {
+  background-color: #B2BEB5;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 800px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-actions .btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modal-actions .btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.modal-actions .btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.modal-actions .btn-primary:hover {
+  background-color: #0056b3;
+}
