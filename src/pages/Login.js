@@ -29,9 +29,13 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("token", data.access_token);
+        console.log("Login API Response:", data); // Log the API response for debugging
+
+        // Adjust to match the correct token key in the response
+        localStorage.setItem("token", data.accessToken); // Use 'accessToken' instead of 'access_token'
+        console.log("Stored token:", localStorage.getItem("token"));
         notyf.success("Login successful!");
-        navigate("/clients"); // Redirect to Clients page
+        navigate("/clients");
       } else {
         notyf.error("Login failed. Please check your credentials.");
       }
@@ -39,6 +43,7 @@ function Login() {
       notyf.error("An error occurred. Please try again.");
     }
   };
+
 
   return (
     <div className="login-page">
