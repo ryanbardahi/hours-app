@@ -181,7 +181,7 @@ function Reports() {
                   <td>{log.clientName}</td>
                   <td>{log.projectName}</td>
                   <td>{log.taskName || "N/A"}</td>
-                  <td>{log.billable ? "Yes" : "No"}</td>
+                  <td>{log.billable ? "Billable" : "Not Billable"}</td>
                   <td>£{log.billableAmount.toFixed(2)}</td>
                   <td>{log.startEndTime || "-"}</td>
                   <td>{log.laborHours.toFixed(2)}</td>
