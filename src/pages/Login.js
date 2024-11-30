@@ -13,7 +13,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://hours-app-server.onrender.com/tokens/login", {
+      const response = await fetch("https://hours-app-server.onrender.com/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
