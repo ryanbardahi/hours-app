@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const notyf = new Notyf();
   const navigate = useNavigate(); // For navigation after login
 
@@ -13,7 +14,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://hours-app-server.onrender.com/api/login", {
+      const response = await fetch("https://hours-app-server.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,15 +62,24 @@ function Login() {
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input
-            type="password"
-            id="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="Enter your password"
-          />
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"} // Toggle input type
+              id="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Enter your password"
+            />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowPassword(!showPassword)} // Toggle visibility
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
         </div>
         <button type="submit" className="btn btn-primary w-100">
           Login
