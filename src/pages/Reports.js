@@ -119,6 +119,10 @@ function Reports() {
     }
   };
 
+  const handleDownloadReport = () => {
+    // Logic to download the report, e.g., generate a PDF or CSV
+    console.log("Downloading the detailed report...");
+  };
 
   return (
     <div className="container mt-5">
@@ -139,6 +143,18 @@ function Reports() {
           placeholder="Select date range"
         />
       </div>
+
+      {/* Show Download Button only if there are timeLogs */}
+      {timeLogs.length > 0 && (
+        <div className="text-center mb-3">
+          <button
+            className="btn btn-success"
+            onClick={handleDownloadReport}
+          >
+            Download Detailed Report
+          </button>
+        </div>
+      )}
 
       {timeLogs.length > 0 && (
         <div className="summary-section text-center mb-4">
