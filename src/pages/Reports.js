@@ -119,9 +119,29 @@ function Reports() {
     }
   };
 
-  const handleDownloadReport = () => {
-    console.log("Downloading the detailed report...");
+  const handleDownloadReport = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/write-to-sheet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: "DETAILED REPORT", // Testing data
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to write to Google Sheet");
+      }
+
+      console.log("Report successfully downloaded!");
+      alert("Data written to Google Sheet successfully!");
+    } catch (error) {
+      console.error("Error downloading report:", error.message);
+    }
   };
+
 
   return (
     <div className="container mt-5">
