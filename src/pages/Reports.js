@@ -1,5 +1,3 @@
-// Reports.js
-
 import React, { useState, useEffect, useCallback } from "react";
 import Flatpickr from "react-flatpickr";
 import { Notyf } from "notyf";
@@ -131,7 +129,6 @@ function Reports() {
     try {
       // Prepare data to send to the server
       const reportData = timeLogs.map(log => ([
-        log.date, // Column A (for grouping on backend)
         log.userName,
         log.clientName,
         log.projectName,
@@ -152,7 +149,6 @@ function Reports() {
       // Calculate totals
       const totalBillableAmount = timeLogs.reduce((sum, log) => sum + log.billableAmount, 0);
       const totalLaborHours = timeLogs.reduce((sum, log) => sum + log.laborHours, 0);
-      const totalBillableHours = timeLogs.reduce((sum, log) => sum + log.billableHours, 0);
 
       const response = await fetch("https://hours-app-server.onrender.com/write-to-sheet", {
         method: "POST",
@@ -164,7 +160,6 @@ function Reports() {
           dateRange: dateRangeString,
           totalBillableAmount,
           totalLaborHours,
-          totalBillableHours, // Include totalBillableHours
         }),
       });
 
