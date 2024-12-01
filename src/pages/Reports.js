@@ -127,64 +127,65 @@ function Reports() {
   const handleDownloadReport = async () => {
     setDownloadLoading(true);
     try {
-      // Map logs to include necessary columns
-      const reportData = timeLogs.map((log) => [
-        log.date, // Column A - DATE
-        log.userName, // Column B - USER
-        log.clientName, // Column C - CLIENT
-        log.projectName, // Column D - PROJECT
-        log.taskName || "N/A", // Column E - TASK
-        log.billable ? log.billableAmount : 0, // Column F - BILLABLE AMOUNT
-        log.startEndTime || "-", // Column G - START/FINISH TIME
-        log.laborHours.toFixed(2), // Column H - TOTAL HOURS
-        log.billableHours.toFixed(2), // Column I - BILLABLE HOURS
-        log.note || "N/A", // Column J - DESCRIPTION
-      ]);
+      // Prepare data to send to the server
+      const reportData = timeLogs.map(log => ([
+        formatDate(log.date), // Ensure date is in 'YYYY-MM-DD' format for proper grouping
+        log.userName,
+        log.clientName,
+        log.projectName,
+        log.taskName || "N/A",
+        log.billable ? "Billable" : "Not Billable",
+        log.billableAmount,
+        log.startEndTime || "-",
+        parseFloat(log.laborHours.toFixed(2)),
+        parseFloat(log.billableHours.toFixed(2)),
+        log.note || "N/A",
+      ]));
 
       // Compute date range string
-      const fromDateFormatted = new Date(dateRange[0]).toLocaleDateString(undefined, {
-        weekday: "short", day: "numeric", month: "short", year: "numeric",
-      });
-      const toDateFormatted = new Date(dateRange[1]).toLocaleDateString(undefined, {
-        weekday: "short", day: "numeric", month: "short", year: "numeric",
-      });
+      const fromDateFormatted = new Date(dateRange[0]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      const toDateFormatted = new Date(dateRange[1]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
       const dateRangeString = `${fromDateFormatted} - ${toDateFormatted}`;
 
       // Calculate totals
       const totalBillableAmount = timeLogs.reduce((sum, log) => sum + log.billableAmount, 0);
-      const totalLaborHours = timeLogs.reduce((sum, log) => sum + log.laborHours, 0);
+      const totalLaborHours = timeLogs.reduce((sum, log) => sum + parseFloat(log.laborHours), 0);
+      const totalBillableHours = timeLogs.reduce((sum, log) => sum + parseFloat(log.billableHours), 0);
 
-      // Send the request to the backend
       const response = await fetch("https://hours-app-server.onrender.com/write-to-sheet", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          data: reportData, // Send the prepared data
-          dateRange: dateRangeString, // Send the date range as a string
-          totalBillableAmount, // Send the total billable amount
-          totalLaborHours, // Send the total labor hours
+          data: reportData,
+          dateRange: dateRangeString,
+          totalBillableAmount,
+          totalLaborHours,
+          totalBillableHours, // Include totalBillableHours for the total row
         }),
       });
 
-      // Handle the response
       if (!response.ok) {
         throw new Error("Failed to write to Google Sheet");
       }
 
       notyf.success("Detailed Report created and data written successfully!");
     } catch (error) {
-      // Handle errors gracefully
       notyf.error("Failed to write to Google Sheet.");
       console.error("Error downloading report:", error.message);
     } finally {
-      setDownloadLoading(false); // Reset the loading state
+      setDownloadLoading(false);
     }
   };
 
-
   // Helper function to format date to YYYY-MM-DD
   const formatDate = (dateString) => {
-    return dateString.slice(0, 10);
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2); // Months are zero-indexed
+    const day = (`0${date.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
   };
 
   return (
