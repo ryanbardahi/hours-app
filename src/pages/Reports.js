@@ -127,13 +127,27 @@ function Reports() {
   const handleDownloadReport = async () => {
     setDownloadLoading(true);
     try {
+      // Prepare data to send to the server
+      const reportData = timeLogs.map(log => ([
+        log.userName,
+        log.clientName,
+        log.projectName,
+        log.taskName || "N/A",
+        log.billable ? "Billable" : "Not Billable",
+        log.billableAmount,
+        log.startEndTime || "-",
+        log.laborHours.toFixed(2),
+        log.billableHours.toFixed(2),
+        log.note || "N/A",
+      ]));
+
       const response = await fetch("https://hours-app-server.onrender.com/write-to-sheet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text: "DETAILED REPORT", // Testing data
+          data: reportData,
         }),
       });
 
@@ -141,7 +155,7 @@ function Reports() {
         throw new Error("Failed to write to Google Sheet");
       }
 
-      notyf.success("Data written to Google Sheet successfully!");
+      notyf.success("Detailed Report created and data written successfully!");
     } catch (error) {
       notyf.error("Failed to write to Google Sheet.");
       console.error("Error downloading report:", error.message);
@@ -209,7 +223,6 @@ function Reports() {
           <table className="table table-striped table-hover table-bordered align-middle mb-5">
             <thead className="table-dark text-center">
               <tr>
-                <th>DATE</th>
                 <th>USER</th>
                 <th>CLIENT</th>
                 <th>PROJECT</th>
@@ -225,7 +238,6 @@ function Reports() {
             <tbody>
               {timeLogs.map((log) => (
                 <tr key={log.logId} className="text-center">
-                  <td>{new Date(log.date).toLocaleDateString()}</td>
                   <td>{log.userName}</td>
                   <td>{log.clientName}</td>
                   <td>{log.projectName}</td>

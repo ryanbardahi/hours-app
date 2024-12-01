@@ -12,7 +12,8 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <Link className="navbar-brand ms-lg-5" to="/">
+        {/* Conditionally change the 'to' attribute based on login status */}
+        <Link className="navbar-brand ms-lg-5" to={isLoggedIn ? "/reports" : "/"}>
           my-hours.
         </Link>
         <button
