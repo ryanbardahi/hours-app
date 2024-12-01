@@ -176,6 +176,11 @@ function Reports() {
     }
   };
 
+  // Helper function to format date to YYYY-MM-DD
+  const formatDate = (dateString) => {
+    return dateString.slice(0, 10);
+  };
+
   return (
     <div className="container mt-5">
       <h2>Reports - {clientName}</h2>
@@ -235,6 +240,7 @@ function Reports() {
           <table className="table table-striped table-hover table-bordered align-middle mb-5">
             <thead className="table-dark text-center">
               <tr>
+                <th>DATE</th>
                 <th>USER</th>
                 <th>CLIENT</th>
                 <th>PROJECT</th>
@@ -250,6 +256,7 @@ function Reports() {
             <tbody>
               {timeLogs.map((log) => (
                 <tr key={log.logId} className="text-center">
+                  <td>{formatDate(log.date)}</td>
                   <td>{log.userName}</td>
                   <td>{log.clientName}</td>
                   <td>{log.projectName}</td>
@@ -260,15 +267,15 @@ function Reports() {
                   <td>{log.laborHours.toFixed(2)}</td>
                   <td>{log.billableHours.toFixed(2)}</td>
                   <td>
-                    <div className="position-relative">
-                      {log.note || "N/A"}
-                      <div
-                        className="edit-popover"
+                    <div className="d-flex align-items-center justify-content-center">
+                      <span>{log.note || "N/A"}</span>
+                      <button
+                        className="btn btn-sm btn-outline-primary ms-2"
                         onClick={() => handleEdit(log)}
-                        style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                        title="Edit Log"
                       >
                         Edit
-                      </div>
+                      </button>
                     </div>
                   </td>
                 </tr>
