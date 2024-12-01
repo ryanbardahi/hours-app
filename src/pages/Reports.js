@@ -18,15 +18,15 @@ function Reports() {
 
   const getDynamicText = () => {
     if (dateRange.length === 2 && dateRange[1]) {
-      const fromDate = new Date(dateRange[0]).toLocaleDateString();
-      const toDate = new Date(dateRange[1]).toLocaleDateString();
+      const fromDate = new Date(dateRange[0]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      const toDate = new Date(dateRange[1]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 
       if (timeLogs.length === 0) {
         return `No reports found for ${fromDate} - ${toDate}`;
       }
       return `Detailed Report for ${fromDate} - ${toDate}`;
     } else if (dateRange.length === 1) {
-      return `Detailed Report for ${new Date(dateRange[0]).toLocaleDateString()}`;
+      return `Detailed Report for ${new Date(dateRange[0]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}`;
     } else {
       return "Select a date range for the Detailed Report.";
     }
@@ -141,6 +141,15 @@ function Reports() {
         log.note || "N/A",
       ]));
 
+      // Compute date range string
+      const fromDateFormatted = new Date(dateRange[0]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      const toDateFormatted = new Date(dateRange[1]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      const dateRangeString = `${fromDateFormatted} - ${toDateFormatted}`;
+
+      // Calculate totals
+      const totalBillableAmount = timeLogs.reduce((sum, log) => sum + log.billableAmount, 0);
+      const totalLaborHours = timeLogs.reduce((sum, log) => sum + log.laborHours, 0);
+
       const response = await fetch("https://hours-app-server.onrender.com/write-to-sheet", {
         method: "POST",
         headers: {
@@ -148,6 +157,9 @@ function Reports() {
         },
         body: JSON.stringify({
           data: reportData,
+          dateRange: dateRangeString,
+          totalBillableAmount,
+          totalLaborHours,
         }),
       });
 
@@ -253,6 +265,7 @@ function Reports() {
                       <div
                         className="edit-popover"
                         onClick={() => handleEdit(log)}
+                        style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
                       >
                         Edit
                       </div>
