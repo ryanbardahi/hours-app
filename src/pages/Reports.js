@@ -120,7 +120,6 @@ function Reports() {
   };
 
   const handleDownloadReport = () => {
-    // Logic to download the report, e.g., generate a PDF or CSV
     console.log("Downloading the detailed report...");
   };
 
@@ -144,19 +143,24 @@ function Reports() {
         />
       </div>
 
+      {loading && (
+        <div className="spinner-overlay">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
+
       {/* Show Download Button only if there are timeLogs */}
-      {timeLogs.length > 0 && (
+      {!loading && timeLogs.length > 0 && (
         <div className="text-center mb-3">
-          <button
-            className="btn btn-success"
-            onClick={handleDownloadReport}
-          >
+          <button className="btn btn-success" onClick={handleDownloadReport}>
             Download Detailed Report
           </button>
         </div>
       )}
 
-      {timeLogs.length > 0 && (
+      {!loading && timeLogs.length > 0 && (
         <div className="summary-section text-center mb-4">
           <p>
             Total Hours: {timeLogs.reduce((sum, log) => sum + log.laborHours, 0).toFixed(2)} hours |
@@ -168,10 +172,9 @@ function Reports() {
         </div>
       )}
 
-      {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-danger text-center">{error}</p>}
 
-      {timeLogs.length > 0 && (
+      {!loading && timeLogs.length > 0 && (
         <div className="table-responsive">
           <table className="table table-striped table-hover table-bordered align-middle mb-5">
             <thead className="table-dark text-center">
