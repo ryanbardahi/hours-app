@@ -1,5 +1,3 @@
-// Reports.js
-
 import React, { useState, useEffect, useCallback } from "react";
 import Flatpickr from "react-flatpickr";
 import { Notyf } from "notyf";
@@ -158,6 +156,17 @@ function Reports() {
         log.laborHours.toFixed(2), // I - TOTAL HOURS
         log.billableHours.toFixed(2), // J - BILLABLE HOURS
         log.note || "N/A", // K - DESCRIPTION
+        log.date, // Column A (for grouping on backend)
+        log.userName,
+        log.clientName,
+        log.projectName,
+        log.taskName || "N/A",
+        log.billable ? "Billable" : "Not Billable",
+        log.billableAmount,
+        log.startEndTime || "-",
+        log.laborHours.toFixed(2),
+        log.billableHours.toFixed(2),
+        log.note || "N/A",
       ]));
 
       // Compute date range string
@@ -179,6 +188,9 @@ function Reports() {
       const totalBillableAmount = timeLogs.reduce((sum, log) => sum + parseFloat(log.billableAmount || 0), 0);
       const totalLaborHours = timeLogs.reduce((sum, log) => sum + parseFloat(log.laborHours || 0), 0);
       const totalBillableHours = timeLogs.reduce((sum, log) => sum + parseFloat(log.billableHours || 0), 0);
+      const totalBillableAmount = timeLogs.reduce((sum, log) => sum + log.billableAmount, 0);
+      const totalLaborHours = timeLogs.reduce((sum, log) => sum + log.laborHours, 0);
+      const totalBillableHours = timeLogs.reduce((sum, log) => sum + log.billableHours, 0);
 
       const response = await fetch("http://localhost:4000/write-to-sheet", { // Ensure the correct backend URL
         method: "POST",
@@ -261,6 +273,9 @@ function Reports() {
               .reduce((sum, log) => sum + parseFloat(log.billableAmount || 0), 0)
               .toLocaleString("en-GB")} |
             Total Billable Hours: {timeLogs.reduce((sum, log) => sum + parseFloat(log.billableHours || 0), 0).toFixed(2)}
+              .reduce((sum, log) => sum + log.billableAmount, 0)
+              .toLocaleString("en-GB")} |
+            Total Billable Hours: {timeLogs.reduce((sum, log) => sum + log.billableHours, 0).toFixed(2)}
           </p>
         </div>
       )}
