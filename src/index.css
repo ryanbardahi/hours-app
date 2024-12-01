@@ -127,41 +127,6 @@ html, body {
   position: relative; /* Ensure table is positioned for z-index context */
 }
 
-.position-relative {
-  position: relative;
-  z-index: 1; /* Create a stacking context for the pop-up */
-}
-
-.edit-popover {
-  display: none;
-  position: absolute;
-  top: 90%;
-  left: 90%; /* Position pop-up to the right of the description */
-  transform: translateY(-50%);
-  background: #007bff;
-  color: #fff;
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensure it's above the table */
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-}
-
-.position-relative:hover .edit-popover {
-  display: inline-block;
-  opacity: 1;
-  transform: translateY(-50%) scale(1);
-  pointer-events: auto; /* Enable interaction */
-}
-
-.edit-popover:hover {
-  background: #0056b3;
-}
-
 .modal-simple {
   position: fixed;
   top: 20%;
