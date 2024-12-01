@@ -1,5 +1,3 @@
-// Reports.js
-
 import React, { useState, useEffect, useCallback } from "react";
 import Flatpickr from "react-flatpickr";
 import { Notyf } from "notyf";
@@ -20,30 +18,15 @@ function Reports() {
 
   const getDynamicText = () => {
     if (dateRange.length === 2 && dateRange[1]) {
-      const fromDate = new Date(dateRange[0]).toLocaleDateString(undefined, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-      const toDate = new Date(dateRange[1]).toLocaleDateString(undefined, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
+      const fromDate = new Date(dateRange[0]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      const toDate = new Date(dateRange[1]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 
       if (timeLogs.length === 0) {
         return `No reports found for ${fromDate} - ${toDate}`;
       }
       return `Detailed Report for ${fromDate} - ${toDate}`;
     } else if (dateRange.length === 1) {
-      return `Detailed Report for ${new Date(dateRange[0]).toLocaleDateString(undefined, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      })}`;
+      return `Detailed Report for ${new Date(dateRange[0]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}`;
     } else {
       return "Select a date range for the Detailed Report.";
     }
@@ -60,7 +43,7 @@ function Reports() {
 
     try {
       const response = await fetch(
-        `http://localhost:${PORT}/time-logs?DateFrom=${DateFrom}&DateTo=${DateTo}`, // Ensure the correct backend URL
+        `https://hours-app-server.onrender.com/time-logs?DateFrom=${DateFrom}&DateTo=${DateTo}`,
         {
           method: "GET",
           headers: {
@@ -114,7 +97,7 @@ function Reports() {
     };
 
     try {
-      const response = await fetch("http://localhost:4000/edit-log", { // Ensure the correct backend URL
+      const response = await fetch("https://hours-app-server.onrender.com/edit-log", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -145,42 +128,29 @@ function Reports() {
     setDownloadLoading(true);
     try {
       // Prepare data to send to the server
-      // Ensure that each log entry includes the DATE as the first element for grouping
       const reportData = timeLogs.map(log => ([
-        log.date, // Column A - DATE
-        log.userName, // B
-        log.clientName, // C
-        log.projectName, // D
-        log.taskName || "N/A", // E
-        log.billable ? "Billable" : "Not Billable", // F - IS BILLABLE
-        log.billableAmount, // G - BILLABLE AMOUNT
-        log.startEndTime || "-", // H - START/FINISH TIME
-        log.laborHours.toFixed(2), // I - TOTAL HOURS
-        log.billableHours.toFixed(2), // J - BILLABLE HOURS
-        log.note || "N/A", // K - DESCRIPTION
+        log.userName,
+        log.clientName,
+        log.projectName,
+        log.taskName || "N/A",
+        log.billable ? "Billable" : "Not Billable",
+        log.billableAmount,
+        log.startEndTime || "-",
+        log.laborHours.toFixed(2),
+        log.billableHours.toFixed(2),
+        log.note || "N/A",
       ]));
 
       // Compute date range string
-      const fromDateFormatted = new Date(dateRange[0]).toLocaleDateString(undefined, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-      const toDateFormatted = new Date(dateRange[1]).toLocaleDateString(undefined, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
+      const fromDateFormatted = new Date(dateRange[0]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      const toDateFormatted = new Date(dateRange[1]).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
       const dateRangeString = `${fromDateFormatted} - ${toDateFormatted}`;
 
       // Calculate totals
-      const totalBillableAmount = timeLogs.reduce((sum, log) => sum + parseFloat(log.billableAmount || 0), 0);
-      const totalLaborHours = timeLogs.reduce((sum, log) => sum + parseFloat(log.laborHours || 0), 0);
-      const totalBillableHours = timeLogs.reduce((sum, log) => sum + parseFloat(log.billableHours || 0), 0);
+      const totalBillableAmount = timeLogs.reduce((sum, log) => sum + log.billableAmount, 0);
+      const totalLaborHours = timeLogs.reduce((sum, log) => sum + log.laborHours, 0);
 
-      const response = await fetch("http://localhost:4000/write-to-sheet", { // Ensure the correct backend URL
+      const response = await fetch("https://hours-app-server.onrender.com/write-to-sheet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -190,7 +160,6 @@ function Reports() {
           dateRange: dateRangeString,
           totalBillableAmount,
           totalLaborHours,
-          totalBillableHours, // Include totalBillableHours
         }),
       });
 
@@ -255,12 +224,11 @@ function Reports() {
       {!loading && timeLogs.length > 0 && (
         <div className="summary-section text-center mb-4">
           <p>
-            Total Hours: {timeLogs.reduce((sum, log) => sum + parseFloat(log.laborHours || 0), 0).toFixed(2)} hours |
+            Total Hours: {timeLogs.reduce((sum, log) => sum + log.laborHours, 0).toFixed(2)} hours |
             Total Billable Amount: £
             {timeLogs
-              .reduce((sum, log) => sum + parseFloat(log.billableAmount || 0), 0)
-              .toLocaleString("en-GB")} |
-            Total Billable Hours: {timeLogs.reduce((sum, log) => sum + parseFloat(log.billableHours || 0), 0).toFixed(2)}
+              .reduce((sum, log) => sum + log.billableAmount, 0)
+              .toLocaleString("en-GB")}
           </p>
         </div>
       )}
@@ -294,10 +262,10 @@ function Reports() {
                   <td>{log.projectName}</td>
                   <td>{log.taskName || "N/A"}</td>
                   <td>{log.billable ? "Billable" : "Not Billable"}</td>
-                  <td>£{parseFloat(log.billableAmount || 0).toFixed(2)}</td>
+                  <td>£{log.billableAmount.toFixed(2)}</td>
                   <td>{log.startEndTime || "-"}</td>
-                  <td>{parseFloat(log.laborHours || 0).toFixed(2)}</td>
-                  <td>{parseFloat(log.billableHours || 0).toFixed(2)}</td>
+                  <td>{log.laborHours.toFixed(2)}</td>
+                  <td>{log.billableHours.toFixed(2)}</td>
                   <td>
                     <div className="d-flex align-items-center justify-content-center">
                       <span>{log.note || "N/A"}</span>
