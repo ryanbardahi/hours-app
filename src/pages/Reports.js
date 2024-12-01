@@ -233,8 +233,7 @@ function Reports() {
             Total Billable Amount: £
             {timeLogs
               .reduce((sum, log) => sum + log.billableAmount, 0)
-              .toLocaleString("en-GB")} |
-            Total Billable Hours: {timeLogs.reduce((sum, log) => sum + log.billableHours, 0).toFixed(2)}
+              .toLocaleString("en-GB")}
           </p>
         </div>
       )}
