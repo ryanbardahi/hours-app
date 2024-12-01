@@ -8,6 +8,7 @@ function Reports() {
   const [dateRange, setDateRange] = useState([]);
   const [timeLogs, setTimeLogs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false); // Separate state for download spinner
   const [error, setError] = useState(null);
   const [modalLog, setModalLog] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -120,6 +121,7 @@ function Reports() {
   };
 
   const handleDownloadReport = async () => {
+    setDownloadLoading(true); // Show spinner
     try {
       const response = await fetch("https://hours-app-server.onrender.com/write-to-sheet", {
         method: "POST",
@@ -139,9 +141,10 @@ function Reports() {
       alert("Data written to Google Sheet successfully!");
     } catch (error) {
       console.error("Error downloading report:", error.message);
+    } finally {
+      setDownloadLoading(false); // Hide spinner
     }
   };
-
 
   return (
     <div className="container mt-5">
@@ -174,8 +177,12 @@ function Reports() {
       {/* Show Download Button only if there are timeLogs */}
       {!loading && timeLogs.length > 0 && (
         <div className="text-center mb-3">
-          <button className="btn btn-success" onClick={handleDownloadReport}>
-            Download Detailed Report
+          <button className="btn btn-success" onClick={handleDownloadReport} disabled={downloadLoading}>
+            {downloadLoading ? (
+              <div className="spinner-border spinner-border-sm" role="status"></div>
+            ) : (
+              "Download Detailed Report"
+            )}
           </button>
         </div>
       )}
